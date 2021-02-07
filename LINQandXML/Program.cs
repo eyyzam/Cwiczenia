@@ -5,16 +5,18 @@ namespace LINQandXML
 {
 	public class Program
 	{
-		private readonly XMLHelper _xmlHelper;
-
-		public Program(XMLHelper xmlHelper)
-		{
-			_xmlHelper = xmlHelper;
-		}
+		private static XMLHelper _xmlHelper;
+		private static DataHelper _dataHelper;
 
 		internal static void Main()
 		{
-			Console.WriteLine("Hello World!");
+			_xmlHelper = new XMLHelper();
+			_dataHelper = new DataHelper();
+
+			var customers = _dataHelper.GetCustomers();
+
+			Console.WriteLine(_xmlHelper.SerializeCustomersToXML(customers));
+			Console.ReadKey();
 		}
 	}
 }

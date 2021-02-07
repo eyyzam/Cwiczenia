@@ -12,6 +12,6 @@ namespace LINQandXML.Models.Implementations
 
 		public string Country { get; set; }
 
-		public List<Order> Orders { get; set; }
+		public List<Order> Orders { get; set; } = new List<Order>();
 	}
 }

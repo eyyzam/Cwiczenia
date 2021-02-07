@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using LINQandXML.Models.Implementations;
 
@@ -22,7 +23,7 @@ namespace LINQandXML.Helpers
 					new XElement("CompanyName", cust.CompanyName),
 					new XElement("City", cust.City),
 					new XElement("Country", cust.Country),
-					new XElement("Orders", SerializeCustomersOrders(cust.Orders))
+					new XElement("Orders", SerializeCustomersOrders(cust.Orders).Any() ? (object) SerializeCustomersOrders(cust.Orders) : string.Empty)
 				);
 
 				response.Add(customer);
