@@ -1,4 +1,4 @@
-﻿## LINQ and XML
+﻿## LINQ and XML (C#)
 
 Napisz program, **wykorzystując operatory LINQ** pobierający ze standardowego wejścia bazę klientów wraz z przypisanymi im zamówieniami i wypisujący na standardowe wyjście listę wszystkich klientów którzy w podanym roku złożyli przynajmniej jedno zamówienie o wartości nie mniejszej niż podana kwota.
 

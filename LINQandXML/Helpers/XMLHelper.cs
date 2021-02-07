@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using LINQandXML.Models.Implementations;
@@ -40,7 +41,7 @@ namespace LINQandXML.Helpers
 				var order = new XElement("Order", 
 					new XElement("OrderID", ord.OrderID),
 					new XElement("OrderDate", ord.OrderDate),
-					new XElement("Total", ord.Total)
+					new XElement("Total", Math.Round(ord.Total, 2, MidpointRounding.AwayFromZero).ToString("F2").Replace(",", "."))
 				);
 
 				response.Add(order);
