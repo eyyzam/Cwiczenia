@@ -9,10 +9,15 @@ public struct Time : IEquatable<Time>, IComparable<Time>
 	private const long _ticksPerHour = _ticksPerMinute * 60;
 	private const long _ticksPerDay = _ticksPerHour * 24;
 
+	private long _ticks;
 	private uint _miliseconds;
 	private byte _seconds, _minutes, _hours;
 
-	public long Ticks { get; private set; }
+	public long Ticks
+	{
+		get => _ticks;
+		private set => _ticks = value > _ticksPerDay ? throw new ArgumentOutOfRangeException() : value;
+	} 
 
 	public uint Miliseconds
 	{
@@ -75,11 +80,11 @@ public struct Time : IEquatable<Time>, IComparable<Time>
 
 	public int CompareTo(Time otherTimeInstance) => Ticks > otherTimeInstance.Ticks ? 1 : Ticks < otherTimeInstance.Ticks ? -1 : 0;
 
-	public static bool operator ==(Time t1, Time t2) => t1.Ticks == t2.Ticks;
-	public static bool operator !=(Time t1, Time t2) => t1.Ticks != t2.Ticks;
-	public static bool operator <(Time t1, Time t2) => t1.Ticks < t2.Ticks;
-	public static bool operator <=(Time t1, Time t2) => t1.Ticks <= t2.Ticks;
-	public static bool operator >(Time t1, Time t2) => t1.Ticks > t2.Ticks;
-	public static bool operator >=(Time t1, Time t2) => t1.Ticks >= t2.Ticks;
+	public static bool operator == (Time t1, Time t2) => t1.Ticks == t2.Ticks;
+	public static bool operator != (Time t1, Time t2) => t1.Ticks != t2.Ticks;
+	public static bool operator <  (Time t1, Time t2) => t1.Ticks < t2.Ticks;
+	public static bool operator <= (Time t1, Time t2) => t1.Ticks <= t2.Ticks;
+	public static bool operator >  (Time t1, Time t2) => t1.Ticks > t2.Ticks;
+	public static bool operator >= (Time t1, Time t2) => t1.Ticks >= t2.Ticks;
 }
 
