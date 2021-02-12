@@ -60,5 +60,10 @@ public struct Time
 		var resultMiliseconds = (Hours * 3600 + Minutes * 60 + Seconds) * 1000 + Miliseconds;
 		_ticks = resultMiliseconds * _ticksPerMilisecond;
 	}
+
+	public override string ToString()
+	{
+		return $"{Hours:00}:{Minutes:00}:{Seconds:00}:{Miliseconds:000}";
+	}
 }
 
