@@ -1,7 +1,7 @@
 ﻿using System;
 
 // ReSharper disable once CheckNamespace
-public struct Time
+public struct Time : IEquatable<Time>, IComparable<Time>
 {
 	private const long _ticksPerMilisecond = 10000;
 	private const long _ticksPerSecond = _ticksPerMilisecond * 1000;
@@ -9,9 +9,10 @@ public struct Time
 	private const long _ticksPerHour = _ticksPerMinute * 60;
 	private const long _ticksPerDay = _ticksPerHour * 24;
 
-	private long _ticks;
 	private uint _miliseconds;
 	private byte _seconds, _minutes, _hours;
+
+	public long Ticks { get; private set; }
 
 	public uint Miliseconds
 	{
@@ -58,12 +59,27 @@ public struct Time
 	private void CalculateTicks()
 	{
 		var resultMiliseconds = (Hours * 3600 + Minutes * 60 + Seconds) * 1000 + Miliseconds;
-		_ticks = resultMiliseconds * _ticksPerMilisecond;
+		Ticks = resultMiliseconds * _ticksPerMilisecond;
 	}
 
 	public override string ToString()
 	{
 		return $"{Hours:00}:{Minutes:00}:{Seconds:00}:{Miliseconds:000}";
 	}
+
+	public bool Equals(Time otherTimeInstance) => Ticks == otherTimeInstance.Ticks;
+
+	public override bool Equals(object obj) => obj is Time otherTimeInstance && Equals(otherTimeInstance);
+
+	public override int GetHashCode() => (Hours, Minutes, Seconds, Miliseconds).GetHashCode();
+
+	public int CompareTo(Time otherTimeInstance) => Ticks > otherTimeInstance.Ticks ? 1 : Ticks < otherTimeInstance.Ticks ? -1 : 0;
+
+	public static bool operator ==(Time t1, Time t2) => t1.Ticks == t2.Ticks;
+	public static bool operator !=(Time t1, Time t2) => t1.Ticks != t2.Ticks;
+	public static bool operator <(Time t1, Time t2) => t1.Ticks < t2.Ticks;
+	public static bool operator <=(Time t1, Time t2) => t1.Ticks <= t2.Ticks;
+	public static bool operator >(Time t1, Time t2) => t1.Ticks > t2.Ticks;
+	public static bool operator >=(Time t1, Time t2) => t1.Ticks >= t2.Ticks;
 }
 
