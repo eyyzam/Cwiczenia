@@ -3,6 +3,13 @@
 // ReSharper disable once CheckNamespace
 public struct Time
 {
+	private const long _ticksPerMilisecond = 10000;
+	private const long _ticksPerSecond = _ticksPerMilisecond * 1000;
+	private const long _ticksPerMinute = _ticksPerSecond * 60;
+	private const long _ticksPerHour = _ticksPerMinute * 60;
+	private const long _ticksPerDay = _ticksPerHour * 24;
+
+	private long _ticks;
 	private uint _miliseconds;
 	private byte _seconds, _minutes, _hours;
 
@@ -32,10 +39,12 @@ public struct Time
 
 	public Time(byte hours, byte minutes, byte seconds, uint miliseconds) : this()
 	{
+		Miliseconds = miliseconds;
 		Seconds = seconds;
 		Minutes = minutes;
-		Seconds = seconds;
-		Miliseconds = miliseconds;
+		Hours = hours;
+
+		CalculateTicks();
 	}
 
 	public Time(byte hours, byte minutes, byte seconds) : this(hours, minutes, seconds, 0) { }
@@ -45,5 +54,11 @@ public struct Time
 	public Time(byte hours) : this(hours, 0, 0, 0) { }
 
 	public Time(string time) : this() { }
+
+	private void CalculateTicks()
+	{
+		var resultMiliseconds = (Hours * 3600 + Minutes * 60 + Seconds) * 1000 + Miliseconds;
+		_ticks = resultMiliseconds * _ticksPerMilisecond;
+	}
 }
 
