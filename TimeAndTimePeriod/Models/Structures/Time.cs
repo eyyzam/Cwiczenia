@@ -21,7 +21,7 @@ public struct Time : IEquatable<Time>, IComparable<Time>
 	public long Ticks
 	{
 		get => _ticks;
-		private set => _ticks = value > _ticksPerDay ? throw new ArgumentOutOfRangeException() : value;
+		private set => _ticks = value > _ticksPerDay || value == 0 ? throw new ArgumentOutOfRangeException() : value;
 	} 
 
 	public uint Miliseconds
@@ -70,6 +70,9 @@ public struct Time : IEquatable<Time>, IComparable<Time>
 			throw new ArgumentException();
 
 		var separatedTimeProperties = time.Split(':').Select(prop => Convert.ToUInt16(prop).ToString("D2")).ToList();
+
+		if (separatedTimeProperties.Count != 3 && separatedTimeProperties.Count != 4)
+			throw new ArgumentException();
 
 		Hours = byte.TryParse(separatedTimeProperties[0], out var _h) ? _h : (byte) 0;
 		Minutes = byte.TryParse(separatedTimeProperties[1], out var _m) ? _m : (byte) 0;
