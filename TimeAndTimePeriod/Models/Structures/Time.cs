@@ -88,6 +88,11 @@ public struct Time : IEquatable<Time>, IComparable<Time>
 		CalculateTicks(_h, _m, _s, (int) _ms);
 	}
 
+	public Time(long ticks) : this()
+	{
+		Ticks = ticks;
+	}
+
 	private void CalculateTicks()
 	{
 		var resultMiliseconds = (Hours * _secondsInHour + Minutes * _secondsInMinute + Seconds) * _milisecondsInSecond + Miliseconds;
@@ -120,5 +125,36 @@ public struct Time : IEquatable<Time>, IComparable<Time>
 	public static bool operator <= (Time t1, Time t2) => t1.Ticks <= t2.Ticks;
 	public static bool operator >  (Time t1, Time t2) => t1.Ticks >  t2.Ticks;
 	public static bool operator >= (Time t1, Time t2) => t1.Ticks >= t2.Ticks;
+
+	public Time Plus(TimePeriod timePeriodInstance)
+	{
+		var ticks = Ticks + timePeriodInstance.Ticks;
+		return ticks > _ticksPerDay ? throw new ArgumentOutOfRangeException() : new Time(ticks);
+	}
+
+	public static Time Plus(Time timeInstance, TimePeriod timePeriodInstance)
+	{
+		var ticks = timeInstance.Ticks + timePeriodInstance.Ticks;
+		return ticks > _ticksPerDay ? throw new ArgumentOutOfRangeException() : new Time(ticks);
+	}
+
+	public Time Minus(TimePeriod timePeriodInstance)
+	{
+		if (Ticks <= timePeriodInstance.Ticks)
+			throw new InvalidOperationException();
+
+		return new Time(Ticks - timePeriodInstance.Ticks);
+	}
+
+	public static Time Minus(Time timeInstance, TimePeriod timePeriodInstance)
+	{
+		if (timeInstance.Ticks <= timePeriodInstance.Ticks)
+			throw new InvalidOperationException();
+
+		return new Time(timeInstance.Ticks - timePeriodInstance.Ticks);
+	}
+
+	public static Time operator + (Time a, TimePeriod b) => a.Plus(b);
+	public static Time operator - (Time a, TimePeriod b) => a.Minus(b);
 }
 

@@ -2,7 +2,7 @@
 using System.Linq;
 
 // ReSharper disable once CheckNamespace
-public struct TimePeriod : IEquatable<TimePeriod>, IComparable<TimePeriod>
+public readonly struct TimePeriod : IEquatable<TimePeriod>, IComparable<TimePeriod>
 {
 	private const long _ticksPerMilisecond = 10000;
 	private const long _ticksPerSecond = _ticksPerMilisecond * 1000;
