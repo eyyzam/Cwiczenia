@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 // ReSharper disable once CheckNamespace
 public struct Time : IEquatable<Time>, IComparable<Time>
@@ -8,6 +9,10 @@ public struct Time : IEquatable<Time>, IComparable<Time>
 	private const long _ticksPerMinute = _ticksPerSecond * 60;
 	private const long _ticksPerHour = _ticksPerMinute * 60;
 	private const long _ticksPerDay = _ticksPerHour * 24;
+
+	private const int _secondsInHour = 3600;
+	private const int _secondsInMinute = 60;
+	private const int _milisecondsInSecond = 1000;
 
 	private long _ticks;
 	private uint _miliseconds;
@@ -59,12 +64,37 @@ public struct Time : IEquatable<Time>, IComparable<Time>
 
 	public Time(byte hours) : this(hours, 0, 0, 0) { }
 
-	public Time(string time) : this() { }
+	public Time(string time) : this()
+	{
+		if (time is null || time.Length == 0)
+			throw new ArgumentException();
+
+		var separatedTimeProperties = time.Split(':').Select(prop => Convert.ToUInt16(prop).ToString("D2")).ToList();
+
+		Hours = byte.TryParse(separatedTimeProperties[0], out var _h) ? _h : (byte) 0;
+		Minutes = byte.TryParse(separatedTimeProperties[1], out var _m) ? _m : (byte) 0;
+		Seconds = byte.TryParse(separatedTimeProperties[2], out var _s) ? _s : (byte) 0;
+
+		if (separatedTimeProperties.Count != 4)
+		{
+			CalculateTicks(_h, _m, _s, 0);
+			return;
+		}
+
+		Miliseconds = uint.TryParse(separatedTimeProperties[3], out var _ms) ? _ms : 0;
+		CalculateTicks(_h, _m, _s, (int) _ms);
+	}
 
 	private void CalculateTicks()
 	{
-		var resultMiliseconds = (Hours * 3600 + Minutes * 60 + Seconds) * 1000 + Miliseconds;
+		var resultMiliseconds = (Hours * _secondsInHour + Minutes * _secondsInMinute + Seconds) * _milisecondsInSecond + Miliseconds;
 		Ticks = resultMiliseconds * _ticksPerMilisecond;
+	}
+
+	private void CalculateTicks(byte hours, byte minutes, byte seconds, int miliseconds)
+	{
+		long resultMiliseconds = (hours * _secondsInHour + minutes * _secondsInMinute + seconds) * _milisecondsInSecond + miliseconds;
+		_ticks = resultMiliseconds * _ticksPerMilisecond;
 	}
 
 	public override string ToString()
