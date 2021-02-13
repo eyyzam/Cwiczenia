@@ -13,6 +13,11 @@ public struct TimePeriod
 	private const int _secondsInMinute = 60;
 	private const int _milisecondsInSecond = 1000;
 
+	private long MilisecondsModulo => (Ticks / _ticksPerMilisecond) % 1000;
+	private long SecondsModulo => (Ticks / _ticksPerSecond) % 60;
+	private long MinutesModulo => (Ticks / _ticksPerMinute) % 60;
+	private long Hours => (Ticks / _ticksPerHour);
+
 	public long Ticks { get; }
 	public long Miliseconds { get; }
 	public long Seconds { get; }
@@ -80,6 +85,12 @@ public struct TimePeriod
 
 		if (ms == 0) throw new ArgumentOutOfRangeException();
 		return ms;
+	}
+
+	public override string ToString()
+	{
+		var miliseconds = MilisecondsModulo == 0 ? "" : $@":{MilisecondsModulo:000}";
+		return $"{Hours:0}:{MinutesModulo:00}:{SecondsModulo:00}{miliseconds}";
 	}
 }
 

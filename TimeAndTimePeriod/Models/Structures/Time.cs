@@ -102,7 +102,8 @@ public struct Time : IEquatable<Time>, IComparable<Time>
 
 	public override string ToString()
 	{
-		return $"{Hours:00}:{Minutes:00}:{Seconds:00}:{Miliseconds:000}";
+		var miliseconds = Miliseconds == 0 ? "" : $@":{Miliseconds:000}";
+		return $"{Hours:00}:{Minutes:00}:{Seconds:00}{miliseconds}";
 	}
 
 	public bool Equals(Time otherTimeInstance) => Ticks == otherTimeInstance.Ticks;
