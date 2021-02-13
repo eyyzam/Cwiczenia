@@ -116,9 +116,9 @@ public struct Time : IEquatable<Time>, IComparable<Time>
 
 	public static bool operator == (Time t1, Time t2) => t1.Ticks == t2.Ticks;
 	public static bool operator != (Time t1, Time t2) => t1.Ticks != t2.Ticks;
-	public static bool operator <  (Time t1, Time t2) => t1.Ticks < t2.Ticks;
+	public static bool operator <  (Time t1, Time t2) => t1.Ticks <  t2.Ticks;
 	public static bool operator <= (Time t1, Time t2) => t1.Ticks <= t2.Ticks;
-	public static bool operator >  (Time t1, Time t2) => t1.Ticks > t2.Ticks;
+	public static bool operator >  (Time t1, Time t2) => t1.Ticks >  t2.Ticks;
 	public static bool operator >= (Time t1, Time t2) => t1.Ticks >= t2.Ticks;
 }
 

@@ -2,7 +2,7 @@
 using System.Linq;
 
 // ReSharper disable once CheckNamespace
-public struct TimePeriod
+public struct TimePeriod : IEquatable<TimePeriod>, IComparable<TimePeriod>
 {
 	private const long _ticksPerMilisecond = 10000;
 	private const long _ticksPerSecond = _ticksPerMilisecond * 1000;
@@ -13,33 +13,33 @@ public struct TimePeriod
 	private const int _secondsInMinute = 60;
 	private const int _milisecondsInSecond = 1000;
 
-	private long MilisecondsModulo => (Ticks / _ticksPerMilisecond) % 1000;
-	private long SecondsModulo => (Ticks / _ticksPerSecond) % 60;
-	private long MinutesModulo => (Ticks / _ticksPerMinute) % 60;
+	private long Miliseconds => (Ticks / _ticksPerMilisecond) % 1000;
+	private long Seconds => (Ticks / _ticksPerSecond) % 60;
+	private long Minutes => (Ticks / _ticksPerMinute) % 60;
 	private long Hours => (Ticks / _ticksPerHour);
 
 	public long Ticks { get; }
-	public long Miliseconds { get; }
-	public long Seconds { get; }
+	public long MilisecondsTotal { get; }
+	public long SecondsTotal { get; }
 
 	public TimePeriod(uint hours, uint minutes, uint seconds, uint miliseconds) : this()
 	{
-		Seconds = hours * _secondsInHour + (minutes % 60) * _secondsInMinute + (seconds % 60);
-		Miliseconds = Seconds * _milisecondsInSecond + (miliseconds % 1000);
+		SecondsTotal = hours * _secondsInHour + (minutes % 60) * _secondsInMinute + (seconds % 60);
+		MilisecondsTotal = Seconds * _milisecondsInSecond + (miliseconds % 1000);
 		Ticks = Miliseconds * _ticksPerMilisecond;
 	}
 
 	public TimePeriod(uint hours, uint minutes) : this()
 	{
-		Seconds = hours * _secondsInHour + (minutes % 60) * _secondsInMinute;
-		Miliseconds = Seconds * _milisecondsInSecond;
+		SecondsTotal = hours * _secondsInHour + (minutes % 60) * _secondsInMinute;
+		MilisecondsTotal = Seconds * _milisecondsInSecond;
 		Ticks = Miliseconds * _ticksPerMilisecond;
 	}
 
 	public TimePeriod(ulong seconds) : this()
 	{
-		Seconds = (long) seconds;
-		Miliseconds = Seconds * _milisecondsInSecond;
+		SecondsTotal = (long) seconds;
+		MilisecondsTotal = Seconds * _milisecondsInSecond;
 		Ticks = Miliseconds * _ticksPerMilisecond;
 	}
 
@@ -48,8 +48,8 @@ public struct TimePeriod
 		var comparision = t1.CompareTo(t2);
 		var timeTicksSubtracted = comparision == 1 ? t1.Ticks - t2.Ticks : t2.Ticks - t1.Ticks;
 
-		Seconds = timeTicksSubtracted / _ticksPerSecond;
-		Miliseconds = Seconds * _milisecondsInSecond;
+		SecondsTotal = timeTicksSubtracted / _ticksPerSecond;
+		MilisecondsTotal = Seconds * _milisecondsInSecond;
 		Ticks = Miliseconds * _ticksPerMilisecond;
 	}
 
@@ -69,14 +69,14 @@ public struct TimePeriod
 
 		if (separatedTimeProperties.Count != 4)
 		{
-			Miliseconds = (long) CalculateMiliseconds(_h, _m % 60, _s % 60, 0);
-			Seconds = Miliseconds / _milisecondsInSecond;
+			MilisecondsTotal = (long) CalculateMiliseconds(_h, _m % 60, _s % 60, 0);
+			SecondsTotal = Miliseconds / _milisecondsInSecond;
 			return;
 		}
 
 		_ = ulong.TryParse(separatedTimeProperties[0], out var _ms) ? _ms : 0;
-		Miliseconds = (long) CalculateMiliseconds(_h, _m % 60, _s % 60, _ms % 1000);
-		Seconds = Miliseconds / _milisecondsInSecond;
+		MilisecondsTotal = (long) CalculateMiliseconds(_h, _m % 60, _s % 60, _ms % 1000);
+		SecondsTotal = Miliseconds / _milisecondsInSecond;
 	}
 
 	private static ulong CalculateMiliseconds(ulong hours, ulong minutes, ulong seconds, ulong miliseconds)
@@ -89,8 +89,23 @@ public struct TimePeriod
 
 	public override string ToString()
 	{
-		var miliseconds = MilisecondsModulo == 0 ? "" : $@":{MilisecondsModulo:000}";
-		return $"{Hours:0}:{MinutesModulo:00}:{SecondsModulo:00}{miliseconds}";
+		var miliseconds = Miliseconds == 0 ? "" : $@":{Miliseconds:000}";
+		return $"{Hours:0}:{Minutes:00}:{Seconds:00}{miliseconds}";
 	}
+
+	public bool Equals(TimePeriod otherTimePeriodInstance) => Ticks == otherTimePeriodInstance.Ticks;
+
+	public override bool Equals(object obj) => obj is TimePeriod otherTimePeriodInstance && Equals(otherTimePeriodInstance);
+
+	public override int GetHashCode() => (Hours, Minutes, Seconds, Miliseconds).GetHashCode();
+
+	public int CompareTo(TimePeriod otherTimePeriodInstance) => Ticks > otherTimePeriodInstance.Ticks ? 1 : Ticks < otherTimePeriodInstance.Ticks ? -1 : 0;
+
+	public static bool operator == (TimePeriod a, TimePeriod b) => a.Ticks == b.Ticks;
+	public static bool operator != (TimePeriod a, TimePeriod b) => a.Ticks != b.Ticks;
+	public static bool operator <  (TimePeriod a, TimePeriod b) => a.Ticks <  b.Ticks;
+	public static bool operator <= (TimePeriod a, TimePeriod b) => a.Ticks <= b.Ticks;
+	public static bool operator >  (TimePeriod a, TimePeriod b) => a.Ticks >  b.Ticks;
+	public static bool operator >= (TimePeriod a, TimePeriod b) => a.Ticks >= b.Ticks;
 }
 
