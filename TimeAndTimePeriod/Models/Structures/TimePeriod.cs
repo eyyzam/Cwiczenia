@@ -25,22 +25,29 @@ public struct TimePeriod : IEquatable<TimePeriod>, IComparable<TimePeriod>
 	public TimePeriod(uint hours, uint minutes, uint seconds, uint miliseconds) : this()
 	{
 		SecondsTotal = hours * _secondsInHour + (minutes % 60) * _secondsInMinute + (seconds % 60);
-		MilisecondsTotal = Seconds * _milisecondsInSecond + (miliseconds % 1000);
-		Ticks = Miliseconds * _ticksPerMilisecond;
+		MilisecondsTotal = SecondsTotal * _milisecondsInSecond + (miliseconds % 1000);
+		Ticks = MilisecondsTotal * _ticksPerMilisecond;
 	}
 
 	public TimePeriod(uint hours, uint minutes) : this()
 	{
 		SecondsTotal = hours * _secondsInHour + (minutes % 60) * _secondsInMinute;
-		MilisecondsTotal = Seconds * _milisecondsInSecond;
-		Ticks = Miliseconds * _ticksPerMilisecond;
+		MilisecondsTotal = SecondsTotal * _milisecondsInSecond;
+		Ticks = MilisecondsTotal * _ticksPerMilisecond;
 	}
 
 	public TimePeriod(ulong seconds) : this()
 	{
 		SecondsTotal = (long) seconds;
-		MilisecondsTotal = Seconds * _milisecondsInSecond;
-		Ticks = Miliseconds * _ticksPerMilisecond;
+		MilisecondsTotal = SecondsTotal * _milisecondsInSecond;
+		Ticks = MilisecondsTotal * _ticksPerMilisecond;
+	}
+
+	public TimePeriod(long miliseconds) : this()
+	{
+		SecondsTotal = miliseconds / _milisecondsInSecond;
+		MilisecondsTotal = SecondsTotal * _milisecondsInSecond;
+		Ticks = MilisecondsTotal * _ticksPerMilisecond;
 	}
 
 	public TimePeriod(Time t1, Time t2) : this()
@@ -83,8 +90,7 @@ public struct TimePeriod : IEquatable<TimePeriod>, IComparable<TimePeriod>
 	{
 		var ms = (hours * _secondsInHour + minutes * _secondsInMinute + seconds) * _milisecondsInSecond + miliseconds;
 
-		if (ms == 0) throw new ArgumentOutOfRangeException();
-		return ms;
+		return ms == 0 ? throw new ArgumentOutOfRangeException() : ms;
 	}
 
 	public override string ToString()
@@ -107,5 +113,14 @@ public struct TimePeriod : IEquatable<TimePeriod>, IComparable<TimePeriod>
 	public static bool operator <= (TimePeriod a, TimePeriod b) => a.Ticks <= b.Ticks;
 	public static bool operator >  (TimePeriod a, TimePeriod b) => a.Ticks >  b.Ticks;
 	public static bool operator >= (TimePeriod a, TimePeriod b) => a.Ticks >= b.Ticks;
+
+	public TimePeriod Plus(TimePeriod otherTimePeriodInstance) => new TimePeriod(MilisecondsTotal + otherTimePeriodInstance.MilisecondsTotal);
+	public static TimePeriod Plus(TimePeriod t1, TimePeriod t2) => new TimePeriod(t1.MilisecondsTotal + t2.MilisecondsTotal);
+
+	public TimePeriod Minus(TimePeriod otherTimePeriodInstance) => new TimePeriod(MilisecondsTotal - otherTimePeriodInstance.MilisecondsTotal);
+	public static TimePeriod Minus(TimePeriod t1, TimePeriod t2) => new TimePeriod(t1.MilisecondsTotal - t2.MilisecondsTotal);
+
+	public static TimePeriod operator + (TimePeriod t1, TimePeriod t2) => t1.Plus(t2);
+	public static TimePeriod operator - (TimePeriod t1, TimePeriod t2) => t1.Minus(t2);
 }
 
