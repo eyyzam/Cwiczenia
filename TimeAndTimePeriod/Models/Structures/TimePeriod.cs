@@ -57,7 +57,7 @@ public readonly struct TimePeriod : IEquatable<TimePeriod>, IComparable<TimePeri
 
 		SecondsTotal = timeTicksSubtracted / _ticksPerSecond;
 		MilisecondsTotal = Seconds * _milisecondsInSecond;
-		Ticks = Miliseconds * _ticksPerMilisecond;
+		Ticks = MilisecondsTotal * _ticksPerMilisecond;
 	}
 
 	public TimePeriod(string time) : this()
@@ -78,12 +78,14 @@ public readonly struct TimePeriod : IEquatable<TimePeriod>, IComparable<TimePeri
 		{
 			MilisecondsTotal = (long) CalculateMiliseconds(_h, _m % 60, _s % 60, 0);
 			SecondsTotal = Miliseconds / _milisecondsInSecond;
+			Ticks = MilisecondsTotal * _ticksPerMilisecond;
 			return;
 		}
 
 		_ = ulong.TryParse(separatedTimeProperties[0], out var _ms) ? _ms : 0;
 		MilisecondsTotal = (long) CalculateMiliseconds(_h, _m % 60, _s % 60, _ms % 1000);
 		SecondsTotal = Miliseconds / _milisecondsInSecond;
+		Ticks = MilisecondsTotal * _ticksPerMilisecond;
 	}
 
 	private static ulong CalculateMiliseconds(ulong hours, ulong minutes, ulong seconds, ulong miliseconds)

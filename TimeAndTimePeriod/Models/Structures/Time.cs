@@ -154,7 +154,7 @@ public struct Time : IEquatable<Time>, IComparable<Time>
 		return new Time(timeInstance.Ticks - timePeriodInstance.Ticks);
 	}
 
-	public static Time operator + (Time a, TimePeriod b) => a.Plus(b);
-	public static Time operator - (Time a, TimePeriod b) => a.Minus(b);
+	public static Time operator + (Time a, TimePeriod b) => Plus(a, b);
+	public static Time operator - (Time a, TimePeriod b) => Minus(a, b);
 }
 

@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LINQandXML", "LINQandXML\LI
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LINQtoObjects", "LINQtoObjects\LINQtoObjects.csproj", "{A0E2E678-CC33-45B4-A2B9-B00A7DBEF6A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeAndTimePeriod", "TimeAndTimePeriod\TimeAndTimePeriod.csproj", "{078DAA78-644A-4EEB-B93D-2CFAE93C0809}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeAndTimePeriod", "TimeAndTimePeriod\TimeAndTimePeriod.csproj", "{078DAA78-644A-4EEB-B93D-2CFAE93C0809}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeAndTimePeriodTests", "TimeAndTimePeriod\TimeAndTimePeriodTests\TimeAndTimePeriodTests.csproj", "{FFC4ACEB-D57B-43E8-80DD-A2068E8E907B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{078DAA78-644A-4EEB-B93D-2CFAE93C0809}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{078DAA78-644A-4EEB-B93D-2CFAE93C0809}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{078DAA78-644A-4EEB-B93D-2CFAE93C0809}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFC4ACEB-D57B-43E8-80DD-A2068E8E907B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFC4ACEB-D57B-43E8-80DD-A2068E8E907B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFC4ACEB-D57B-43E8-80DD-A2068E8E907B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFC4ACEB-D57B-43E8-80DD-A2068E8E907B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
